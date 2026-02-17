@@ -1,0 +1,252 @@
+/* scs.css */
+
+/* ---------- Base reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: radial-gradient(circle at top left, #4f46e5, #020617 55%);
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Login container ---------- */
+.login {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem;
+}
+
+/* ---------- Card / form ---------- */
+.login__form {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 1.25rem;
+  padding: 2.5rem 2.25rem 2.25rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #e5e7eb;
+}
+
+.login__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.8rem;
+  color: #f9fafb;
+}
+
+/* ---------- Inputs ---------- */
+.login__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.login__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 0.9rem;
+  padding: 0.9rem 0.95rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease, transform 0.1s ease;
+}
+
+.login__box:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4);
+  background: rgba(15, 23, 42, 0.95);
+  transform: translateY(-1px);
+}
+
+.login__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.1rem 0.1rem;
+}
+
+.login__input::placeholder {
+  color: transparent;
+}
+
+/* Floating label */
+.login__label {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: 0.18s ease;
+  background: transparent;
+}
+
+/* When input has value or is focused */
+.login__input:focus + .login__label,
+.login__input:not(:placeholder-shown) + .login__label {
+  top: 0.25rem;
+  font-size: 0.7rem;
+  color: #a5b4fc;
+}
+
+/* Icon */
+.login__box i {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin-left: 0.4rem;
+}
+
+/* ---------- Remember / forgot ---------- */
+.login__check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.6rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.login__check-box {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.login__check-input {
+  width: 15px;
+  height: 15px;
+  accent-color: #6366f1;
+  cursor: pointer;
+}
+
+.login__check-label {
+  cursor: pointer;
+}
+
+.login__forget {
+  color: #a5b4fc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.login__forget:hover {
+  color: #c7d2fe;
+}
+
+/* ---------- Button ---------- */
+.login__button {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #f9fafb;
+  font-weight: 600;
+  font-size: 0.98rem;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 18px 35px rgba(79, 70, 229, 0.55);
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    filter 0.12s ease;
+}
+
+.login__button:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 22px 40px rgba(79, 70, 229, 0.7);
+  transform: translateY(-1px);
+}
+
+.login__button:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.5);
+}
+
+/* ---------- Register text ---------- */
+.login__register {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.login__register a {
+  color: #a5b4fc;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 0.15rem;
+  transition: color 0.15s ease;
+}
+
+.login__register a:hover {
+  color: #c7d2fe;
+}
+
+/* --------------------------------------------------
+   POPUP
+   -------------------------------------------------- */
+#popupBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+#popupBox {
+  background: var(--panel-bg);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  padding: 22px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+}
+
+#popupClose {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 480px) {
+  .login__form {
+    padding: 2rem 1.5rem 1.8rem;
+  }
+
+  .login__title {
+    font-size: 1.6rem;
+  }
+}
+
