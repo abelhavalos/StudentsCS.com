@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Students Control System Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+  /* --------------------------------------------------
+   DARK MODE (default)
+   -------------------------------------------------- */
+:root {
+  --bg: radial-gradient(circle at top left, #4f46e5, #020617 55%);
+  --panel-bg: rgba(15, 23, 42, 0.92);
+  --text: #e5e7eb;
+  --border: rgba(148, 163, 184, 0.25);
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --row-hover: rgba(99, 102, 241, 0.15);
+  --input-bg: rgba(15, 23, 42, 0.85);
+}
+
+/* --------------------------------------------------
+   LIGHR MODE (matches Login theme)
+   -------------------------------------------------- */
+body.light{
+  --bg: #f3f4f6;
+  --panel-bg: #ffffff;
+  --text: #1f2937;
+  --border: #e5e7eb;
+  --accent: #4f46e5;
+  --accent-hover: #6366f1;
+  --row-hover: #eef2ff;
+  --input-bg: #ffffff;
+}
+
+/* --------------------------------------------------
+   GLOBAL
+   -------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* --------------------------------------------------
+   TOP BAR
+   -------------------------------------------------- */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 22px;
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: background 0.3s ease;
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------
+   LAYOUT
+   -------------------------------------------------- */
+.container {
+  display: flex;
+  height: calc(100vh - 60px);
+  padding: 18px;
+  gap: 18px;
+}
+
+/* --------------------------------------------------
+   PANELS
+   -------------------------------------------------- */
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.08);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.form-panel {
+  width: 34%;
+  min-width: 280px;
+}
+
+.table-panel {
+  width: 66%;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+}
+
+/* --------------------------------------------------
+   HEADINGS
+   -------------------------------------------------- */
+h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+/* --------------------------------------------------
+   FORM FIELDS
+   -------------------------------------------------- */
+label {
+  display: block;
+  margin-top: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+input,
+textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: 0.18s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------
+   BUTTONS
+   -------------------------------------------------- */
+.btn-row {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+button {
+  padding: 10px 8px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: 0.12s ease;
+}
+
+button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------
+   TABLE
+   -------------------------------------------------- */
+.table-body-wrap {
+  flex: 1;
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--panel-bg);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  cursor: pointer;
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+}
+
+tr:hover {
+  background: var(--row-hover);
+}
+
+/* Selected row */
+tr.selected {
+  background: var(--accent) !important;
+  color: white !important;
+}
+
+body.dark tr.selected {
+  background: #f9fafb !important;
+  color: #020617 !important;
+}
+
+/* --------------------------------------------------
+   POPUP
+   -------------------------------------------------- */
+#popupBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+#popupBox {
+  background: var(--panel-bg);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  padding: 22px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+}
+
+#popupClose {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------
+   RESPONSIVE
+   -------------------------------------------------- */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+  .form-panel,
+  .table-panel {
+    width: 100%;
+  }
+}
+  </style>
+
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Students Control System</h1>
+  <div class="toggle-wrap">
+    <span>Light mode</span>
+    <input type="checkbox" id="lightToggle">
+  </div>
+</div>
+
+<div class="container">
+  <!-- LEFT FORM -->
+  <div class="panel form-panel">
+    <h2>Student Form</h2>
+
+    <input type="hidden" id="rowId">
+
+    <label>Fullname</label>
+    <input type="text" id="Fullname">
+
+    <label>Phone Number</label>
+    <input type="text" id="PhoneNumber">
+
+    <label>Email Address</label>
+    <input type="text" id="EmailAddress">
+
+    <label>Message</label>
+    <textarea id="Message"></textarea>
+
+    <div class="btn-row">
+      <button onclick="addLead()">Add</button>
+      <button onclick="updateLead()">Update</button>
+      <button onclick="searchLead()">Search</button>
+      <button onclick="displayAll()">Display All</button>
+      <button onclick="clearAll()">Clear All</button>
+      <button onclick="deleteLead()">Delete</button>
+    </div>
+  </div>
+
+  <!-- RIGHT TABLE -->
+  <div class="panel table-panel">
+    <div class="table-header-row">
+      <h2>Students List</h2>
+    </div>
+
+    <div class="table-body-wrap">
+      <table id="leadTable">
+        <thead>
+          <tr>
+            <th data-key="row">Row <span class="sort-indicator" id="sort-row">↕</span></th>
+            <th data-key="Fullname">Fullname <span class="sort-indicator" id="sort-Fullname">↕</span></th>
+            <th data-key="PhoneNumber">Phone <span class="sort-indicator" id="sort-PhoneNumber">↕</span></th>
+            <th data-key="EmailAddress">Email <span class="sort-indicator" id="sort-EmailAddress">↕</span></th>
+            <th data-key="Message">Message <span class="sort-indicator" id="sort-Message">↕</span></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div id="popupBackdrop">
+  <div id="popupBox">
+    <div id="popupMessage"></div>
+    <button id="popupClose" onclick="closePopup()">OK</button>
+  </div>
+</div>
+<script>
+/* ============================
+   CONFIG
+============================ */
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxhDb2Ej-OBTp2W8mNZEQrID4QnUciqr3f2ZKGhx34UDxzFBoLlEbS7uS4gWFCDaE1umQ/exec";
+
+let allRows = [];
+let filteredRows = [];
+let currentPage = 1;
+const pageSize = 10;
+let sortKey = "row";
+let sortDir = "asc";
+
+/* ============================
+   DARK MODE
+============================ */
+const darkToggle = document.getElementById("lightToggle");
+darkToggle.addEventListener("change", () => {
+  document.body.classList.toggle("light", darkToggle.checked);
+});
+
+/* ============================
+   POPUP
+============================ */
+function popup(msg) {
+  document.getElementById("popupMessage").innerText = msg;
+  document.getElementById("popupBackdrop").style.display = "flex";
+}
+function closePopup() {
+  document.getElementById("popupBackdrop").style.display = "none";
+}
+
+/* ============================
+   FORM HELPERS
+============================ */
+function getForm() {
+  return {
+    rowId: document.getElementById("rowId").value.trim(),
+    Fullname: document.getElementById("Fullname").value.trim(),
+    PhoneNumber: document.getElementById("PhoneNumber").value.trim(),
+    EmailAddress: document.getElementById("EmailAddress").value.trim(),
+    Message: document.getElementById("Message").value.trim()
+  };
+}
+
+function clearForm() {
+  document.getElementById("rowId").value = "";
+  document.getElementById("Fullname").value = "";
+  document.getElementById("PhoneNumber").value = "";
+  document.getElementById("EmailAddress").value = "";
+  document.getElementById("Message").value = "";
+}
+
+/* ============================
+   SYNC FILTERED ROWS
+============================ */
+function syncFiltered() {
+  filteredRows = [...allRows];
+}
+
+/* ============================
+   CLEAR ALL (FORM + TABLE)
+============================ */
+function clearAll() {
+  clearForm();
+  clearTable();
+  popup("Form and table cleared");
+}
+
+/* ============================
+   CLEAR TABLE (EMPTY DATA)
+============================ */
+function clearTable() {
+  allRows = [];
+  filteredRows = [];
+  currentPage = 1;
+
+  document.querySelectorAll("#leadTable tbody tr")
+    .forEach(r => r.classList.remove("selected"));
+
+  renderTable();
+}
+
+/* ============================
+   API CALLER
+============================ */
+async function callApi(params) {
+  const url = API_URL + "?" + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Network error");
+  return res.json();
+}
+
+/* ============================
+   ACTIONS
+============================ */
+async function addLead() {
+  const f = getForm();
+  try {
+    const data = await callApi({
+      action: "add",
+      Fullname: f.Fullname,
+      PhoneNumber: f.PhoneNumber,
+      EmailAddress: f.EmailAddress,
+      Message: f.Message
+    });
+
+    if (data.message) popup(data.message);
+
+    if (data.table) {
+      allRows = data.table;
+      syncFiltered();
+      currentPage = 1;
+      renderTable();
+    }
+
+    clearForm();
+  } catch (err) {
+    popup(err.message);
+  }
+}
+
+async function updateLead() {
+  const f = getForm();
+  if (!f.rowId) return popup("Select a row first.");
+
+  try {
+    const data = await callApi({
+      action: "update",
+      rowId: f.rowId,
+      Fullname: f.Fullname,
+      PhoneNumber: f.PhoneNumber,
+      EmailAddress: f.EmailAddress,
+      Message: f.Message
+    });
+
+    if (data.message) popup(data.message);
+
+    if (data.table) {
+      allRows = data.table;
+      syncFiltered();
+      renderTable();
+    }
+  } catch (err) {
+    popup(err.message);
+  }
+}
+
+async function searchLead() {
+  const f = getForm();
+  try {
+    const data = await callApi({
+      action: "search",
+      Fullname: f.Fullname,
+      PhoneNumber: f.PhoneNumber,
+      EmailAddress: f.EmailAddress,
+      Message: f.Message
+    });
+
+    if (data.message) popup(data.message);
+
+    if (data.table) {
+      allRows = data.table;
+      syncFiltered();
+      currentPage = 1;
+      renderTable();
+    }
+  } catch (err) {
+    popup(err.message);
+  }
+}
+
+async function displayAll() {
+  try {
+    const data = await callApi({ action: "display" });
+
+    if (data.table) {
+      allRows = data.table;
+      syncFiltered();
+      currentPage = 1;
+      renderTable();
+    }
+  } catch (err) {
+    popup(err.message);
+  }
+}
+
+async function deleteLead() {
+  const f = getForm();
+  if (!f.rowId) return popup("Select a row first.");
+
+  try {
+    const data = await callApi({
+      action: "delete",
+      rowId: f.rowId
+    });
+
+    if (data.message) popup(data.message);
+
+    if (data.table) {
+      allRows = data.table;
+      syncFiltered();
+      currentPage = 1;
+      renderTable();
+    }
+
+    clearForm();
+  } catch (err) {
+    popup(err.message);
+  }
+}
+
+/* ============================
+   TABLE RENDERING
+============================ */
+function renderTable() {
+  const sorted = [...filteredRows].sort((a, b) => {
+    let va = a[sortKey];
+    let vb = b[sortKey];
+    if (typeof va === "string") va = va.toLowerCase();
+    if (typeof vb === "string") vb = vb.toLowerCase();
+    if (va < vb) return sortDir === "asc" ? -1 : 1;
+    if (va > vb) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  const totalPages = Math.max(1, Math.ceil((sorted.length || 0) / pageSize));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const start = (currentPage - 1) * pageSize;
+  const pageRows = sorted.slice(start, start + pageSize);
+
+  const tbody = document.querySelector("#leadTable tbody");
+  tbody.innerHTML = "";
+
+  if (pageRows.length === 0) {
+    // optional: show empty state row
+    // const tr = document.createElement("tr");
+    // tr.innerHTML = `<td colspan="5" style="text-align:center; opacity:0.7;">No data</td>`;
+    // tbody.appendChild(tr);
+  } else {
+    pageRows.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.row}</td>
+        <td>${row.Fullname}</td>
+        <td>${row.PhoneNumber}</td>
+        <td>${row.EmailAddress}</td>
+        <td>${row.Message}</td>
+      `;
+
+      tr.addEventListener("click", () => {
+        document.getElementById("rowId").value = row.row;
+        document.getElementById("Fullname").value = row.Fullname;
+        document.getElementById("PhoneNumber").value = row.PhoneNumber;
+        document.getElementById("EmailAddress").value = row.EmailAddress;
+        document.getElementById("Message").value = row.Message;
+
+        document.querySelectorAll("#leadTable tbody tr")
+          .forEach(r => r.classList.remove("selected"));
+        tr.classList.add("selected");
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  const pag = document.getElementById("pagination");
+  pag.innerHTML = "";
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if (i === currentPage) btn.classList.add("active");
+    btn.addEventListener("click", () => {
+      currentPage = i;
+      renderTable();
+    });
+    pag.appendChild(btn);
+  }
+
+  updateSortIndicators();
+}
+
+/* ============================
+   SORT INDICATORS
+============================ */
+function updateSortIndicators() {
+  document.querySelectorAll(".sort-indicator").forEach(el => {
+    el.textContent = "↕";
+  });
+  const active = document.getElementById("sort-" + sortKey);
+  if (active) active.textContent = sortDir === "asc" ? "↑" : "↓";
+}
+
+document.querySelectorAll("#leadTable thead th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.getAttribute("data-key");
+    if (!key) return;
+    if (sortKey === key) {
+      sortDir = sortDir === "asc" ? "desc" : "asc";
+    } else {
+      sortKey = key;
+      sortDir = "asc";
+    }
+    renderTable();
+  });
+});
+
+/* ============================
+   INITIAL LOAD (ONLY ONCE)
+============================ */
+window.addEventListener("DOMContentLoaded", () => {
+  displayAll();
+});
+</script>
+</body>
+</html>
