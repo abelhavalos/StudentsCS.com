@@ -13,10 +13,10 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="styles/style.css">
 
-    <title>Register – Student Control System</title>
+    <title>Student Control System</title>
 
     <style>
-        /* Popup styling (same as login + dashboard) */
+        /* Popup styling (same as dashboard) */
         #popupBackdrop {
             position: fixed;
             inset: 0;
@@ -54,15 +54,9 @@
 
     <div class="login">
         <form action="" class="login__form">
-            <h1 class="login__title">Create Account</h1>
+            <h1 class="login__title">Login</h1>
 
             <div class="login__inputs">
-
-                <div class="login__box">
-                    <input type="text" name="fullname" id="fullname" placeholder=" " class="login__input" required>
-                    <label for="fullname" class="login__label">Full Name</label>
-                    <i class="ri-user-fill"></i>
-                </div>
 
                 <div class="login__box">
                     <input type="email" name="email" id="email" placeholder=" " class="login__input" required>
@@ -76,18 +70,21 @@
                     <i class="ri-lock-password-fill"></i>
                 </div>
 
-                <div class="login__box">
-                    <input type="password" name="confirm" id="confirm" placeholder=" " class="login__input" required>
-                    <label for="confirm" class="login__label">Confirm Password</label>
-                    <i class="ri-lock-2-fill"></i>
-                </div>
-
             </div>
 
-            <button type="submit" class="login__button">Register</button>
+            <div class="login__check">
+                <div class="login__check-box">
+                    <input type="checkbox" name="checkbox" id="user-check" class="login__check-input">
+                    <label for="user-check" class="login__check-label">Remember Me</label>
+                </div>
+
+                <a href="ForgotPassword.html" class="login__forget">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="login__button">Login</button>
 
             <div class="login__register">
-                Already have an account? <a href="index.html">Login</a>
+                Don't have an account? <a href="Register.html">Register</a>
             </div>
         </form>
     </div>
@@ -118,38 +115,32 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const fullname = document.getElementById("fullname").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    const confirm = document.getElementById("confirm").value.trim();
 
-    if (password !== confirm) {
-      popup("Passwords do not match");
-      return;
-    }
-
-    const url = `${WEBAPP_URL}?action=register&fullname=${encodeURIComponent(fullname)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+    const url = `${WEBAPP_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
 
     try {
       const res = await fetch(url);
       const data = await res.json();
+      console.log("Response:", data);
 
       if (data.success) {
-        popup("Account created successfully");
+        popup("Welcome " + data.fullname);
 
-        // Optional: auto-login after registration
-        sessionStorage.setItem("loggedInUser", email);
+        // Save login session
+        sessionStorage.setItem("loggedInUser", data.email);
 
         setTimeout(() => {
-            window.location.href = "index.html";
+            window.location.href = "dashboard.html";
         }, 800);
 
       } else {
-        popup(data.message || "Registration failed");
+        popup(data.message || "Login failed");
       }
     } catch (err) {
-      console.error(err);
-      popup("Network error");
+      console.error("Fetch error:", err);
+      popup("Network or server error. Check console.");
     }
   });
 });
